@@ -1,0 +1,31 @@
+{
+    "name": "blog-platform",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node server.js && npm run client",
+        "build": "cd client && npm run build",
+        "client-install": "cd client && npm install",
+        "client": "cd client && npm start",
+        "server": "nodemon server.js",
+        "dev": "concurrently \" npm run server \" \"npm run client\"",
+        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run client-install && npm run build"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.0.1",
+        "cloudinary": "^1.30.0",
+        "concurrently": "^7.2.0",
+        "dotenv": "^16.0.0",
+        "express": "^4.17.2",
+        "express-validator": "^6.14.0",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.2.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.16"
+    }
+}
