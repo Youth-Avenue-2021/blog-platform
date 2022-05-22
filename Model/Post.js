@@ -32,7 +32,7 @@ const postSchema = new mongoose.Schema({
     },
     slug: {
         type: String,
-        required: true,
+        default: "",
     },
     readingTime: {
         type: Number,
