@@ -8,7 +8,6 @@ const searchPost = async (req, res) => {
     } catch (err) {
         res.status(404).json({ msg: "Result Not founded.", error: err.message });
     }
-    // res.send(req.query.search);
 };
 
 module.exports = searchPost;
