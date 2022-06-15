@@ -5,6 +5,7 @@ const passport = require("passport");
 const session = require("express-session");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const googleUser = require("../../Model/googleUser");
+const userData = require("../../Model/userData");
 require("dotenv").config();
 
 googleAuth.use(session({ secret: "secret123", resave: false, saveUninitialized: true, cookie: { secure: true } }));
@@ -40,15 +41,24 @@ passport.use(
             } else {
                 const newUser = new googleUser({
                     userId: profile.id,
-                    name: profileData.name,
-                    email: profileData.email,
-                    profilePic: profileData.pic,
                 });
+
                 newUser.save(function (err) {
                     if (err) {
                         console.log(err);
                     }
                     done(null, newUser);
+                    const newUserData = new userData({
+                        user: newUser._id,
+                        fullName: profileData.name,
+                        email: profileData.email,
+                        profilePic: profileData.pic,
+                    });
+                    newUserData.save(function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
                 });
             }
         }

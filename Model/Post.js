@@ -16,7 +16,6 @@ description for seo (50 words about article)
 */
 
 const mongoose = require("mongoose");
-// const user = require("./User");
 
 const postSchema = new mongoose.Schema({
     title: {
@@ -38,14 +37,16 @@ const postSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    likes: {
-        type: Number,
-        required: true,
-        default: 0,
-    },
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "userData",
+            default: undefined,
+        },
+    ],
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Users",
+        ref: "userData",
         required: true,
     },
     coverImg: {

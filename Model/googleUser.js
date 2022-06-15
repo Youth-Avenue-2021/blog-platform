@@ -6,17 +6,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    email: {
-        type: String,
-        // required: true,
-    },
-    profilePic: {
-        type: String,
-    },
-    fullName: {
-        type: String,
-        // required: true,
-    },
 });
 
 userSchema.plugin(passportLocalMongoose);
