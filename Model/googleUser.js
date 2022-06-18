@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const passportLocalMongoose = require("passport-local-mongoose");
 
 const userSchema = new mongoose.Schema({
     userId: {
@@ -7,8 +6,6 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
 });
-
-userSchema.plugin(passportLocalMongoose);
 
 const googleUserData = mongoose.model("googleUser", userSchema);
 module.exports = googleUserData;

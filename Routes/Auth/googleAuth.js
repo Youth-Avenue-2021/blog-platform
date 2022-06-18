@@ -6,10 +6,11 @@ const session = require("express-session");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const googleUser = require("../../Model/googleUser");
 const userData = require("../../Model/userData");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 googleAuth.use(session({ secret: "secret123", resave: false, saveUninitialized: true, cookie: { secure: true } }));
-passport.use(googleUser.createStrategy());
+// passport.use(googleUser.createStrategy());
 
 passport.serializeUser(function (user, done) {
     done(null, user);
@@ -40,26 +41,33 @@ passport.use(
                 done(null, oldUser);
             } else {
                 const newUser = new googleUser({
-                    userId: profile.id,
+                    userId: profileData.id,
                 });
-
-                newUser.save(function (err) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    done(null, newUser);
-                    const newUserData = new userData({
-                        user: newUser._id,
-                        fullName: profileData.name,
-                        email: profileData.email,
-                        profilePic: profileData.pic,
-                    });
-                    newUserData.save(function (err) {
+                try {
+                    newUser.save(function (err) {
                         if (err) {
                             console.log(err);
                         }
+                        done(null, newUser);
+                        const newUserData = new userData({
+                            user: newUser._id,
+                            fullName: profileData.name,
+                            email: profileData.email,
+                            profilePic: profileData.pic,
+                        });
+                        newUserData.save(async function (err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            // creating jwt tokens and setting in headers
+                            const token = jwt.sign({ id: newUserData._id.valueOf() }, process.env.JWT_TOKEN_SECRET, { expiresIn: "7d" });
+                            res.cookie("accessToken", token);
+                            console.log(token);
+                        });
                     });
-                });
+                } catch (err) {
+                    console.log(err);
+                }
             }
         }
     )
