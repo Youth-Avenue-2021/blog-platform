@@ -9,6 +9,7 @@ const isLoggedIn = async (req, res, next) => {
         next();
     } catch (err) {
         console.log("Maybe token is expired, try again : " + err);
+        // send access denied as response
         res.redirect("/");
     }
 };

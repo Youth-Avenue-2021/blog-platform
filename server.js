@@ -37,7 +37,7 @@ app.get("/", async (req, res) => {
         try {
             const decode = jwt.verify(req.cookies.accessToken, process.env.JWT_TOKEN_SECRET);
             const user = await userData.findOne({ _id: decode.id });
-            console.log(user);
+            // console.log(user);
             res.send(`Welcome : ${user.fullName} <a href="/logout">logout</a>`);
         } catch (err) {
             console.log("err token expired : ", err);

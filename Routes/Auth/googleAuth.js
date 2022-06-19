@@ -1,6 +1,5 @@
 const express = require("express");
 const googleAuth = express.Router();
-const isLoggedIn = require("../../Middlewares/googleAuth/isLoggedIn");
 const passport = require("passport");
 const session = require("express-session");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -22,7 +21,7 @@ passport.use(
             scope: ["profile", "email"],
         },
         async (accessToken, refreshToken, profile, done) => {
-            console.log("GOOGLE BASED OAUTH VALIDATION GETTING CALLED");
+            // console.log("GOOGLE BASED OAUTH VALIDATION GETTING CALLED");
             done(null, profile);
         }
     )
@@ -50,12 +49,12 @@ googleAuth.get("/googleRedirect", passport.authenticate("google"), async (req, r
 
 const findOrCreate = async (user, res, req) => {
     const existingUser = await googleUser.findOne({ userId: user.id });
-    console.log(user.id);
+    // console.log(user.id);
     if (existingUser) {
-        console.log("existing user : ", existingUser);
+        // console.log("existing user : ", existingUser);
         if (req.cookies[0] == null && !req.cookies.accessToken) {
             const findUserData = await userData.findOne({ user: existingUser._id });
-            console.log(findUserData);
+            // console.log(findUserData);
             const token = generateAccessToken(findUserData._id.valueOf());
             res.cookie("accessToken", token);
         }
@@ -83,7 +82,7 @@ const findOrCreate = async (user, res, req) => {
                 }
                 // creating jwt tokens and setting in headers
                 const token = generateAccessToken(googleUserData._id.valueOf());
-                console.log("setting cookies");
+                // console.log("setting cookies");
                 res.cookie("accessToken", token);
                 res.redirect("/");
             });
