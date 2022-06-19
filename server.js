@@ -14,8 +14,8 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
-app.use("/api", apiRoutes);
 app.use(cookieParser());
+app.use("/api", apiRoutes);
 
 // Google auth
 app.use("/", googleAuth);
@@ -30,6 +30,7 @@ mongoose
     .catch((err) => console.error("Database connection failed : ", err));
 
 app.get("/", async (req, res) => {
+    // console.log("req.user is : ", req.user);
     if (req.cookies[0] == null && !req.cookies.accessToken) {
         res.send(`<a href="http://localhost:${PORT}/googleRedirect">Continue with Google</a>`);
     } else {

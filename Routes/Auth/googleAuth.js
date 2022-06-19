@@ -56,11 +56,10 @@ const findOrCreate = async (user, res, req) => {
         if (req.cookies[0] == null && !req.cookies.accessToken) {
             const findUserData = await userData.findOne({ user: existingUser._id });
             console.log(findUserData);
-            const token = jwt.sign({ id: findUserData._id.valueOf() }, process.env.JWT_TOKEN_SECRET, { expiresIn: "5d" });
+            const token = generateAccessToken(findUserData._id.valueOf());
             res.cookie("accessToken", token);
-        } else {
-            return res.redirect("/");
         }
+        return res.redirect("/");
     }
     const newGoogleUser = {
         userId: user.id,
@@ -83,7 +82,7 @@ const findOrCreate = async (user, res, req) => {
                     console.log(err);
                 }
                 // creating jwt tokens and setting in headers
-                const token = jwt.sign({ id: googleUserData._id.valueOf() }, process.env.JWT_TOKEN_SECRET, { expiresIn: "5d" });
+                const token = generateAccessToken(googleUserData._id.valueOf());
                 console.log("setting cookies");
                 res.cookie("accessToken", token);
                 res.redirect("/");
@@ -92,6 +91,10 @@ const findOrCreate = async (user, res, req) => {
     } catch (err) {
         console.log(err);
     }
+};
+
+const generateAccessToken = (userId) => {
+    return jwt.sign({ id: userId }, process.env.JWT_TOKEN_SECRET, { expiresIn: "5d" });
 };
 
 googleAuth.get("/googleRedirect", passport.authenticate("google", { successRedirect: "/dashboard", failureRedirect: "/login" }));
